@@ -1,4 +1,8 @@
-const Navbar = ({ category, setCategory }) => {
+import React, { useState } from "react";
+
+const Navbar = ({ category, setCategory, books, setFilteredBooks }) => {
+  const [searchTerm, setSearchTerm] = useState("");
+
   const categories = [
     { label: "All Books", value: "all" },
     { label: "Fiction", value: "fiction" },
@@ -8,78 +12,66 @@ const Navbar = ({ category, setCategory }) => {
     { label: "Humor", value: "humor" },
   ];
 
+  const handleSearch = (e) => {
+    const term = e.target.value;
+    setSearchTerm(term);
+
+    const filtered = books.filter(
+      (book) =>
+        book.volumeInfo?.title?.toLowerCase().includes(term.toLowerCase()) ||
+        book.volumeInfo?.authors?.[0]?.toLowerCase().includes(term.toLowerCase())
+    );
+
+    setFilteredBooks(filtered);
+  };
+
   return (
-
 <>
-<div className="shadow-lg flex flex-col sm:flex-row justify-between items-start p-4 mb-6">
-
-  <h1 className="text-3xl font-bold text-black">
+   <div className="shadow-lg p-4 mb-6 flex flex-col sm:flex-row items-center sm:justify-between gap-3 sm:gap-0">
+  
+  <h1 className="text-2xl sm:text-3xl font-bold text-black text-center sm:text-left">
     BookHaven
   </h1>
 
- {/* for mobile */}
-  <p className="text-gray-600 opacity-70 text-sm mt-1 sm:hidden">
-     Discover your next favorite story from our curated collection
-  </p>
-
-{/* for desktop */}
-  <p className="text-gray-600 opacity-70 text-base mt-1 hidden sm:block md:text-lg">
+  
+  <p className="text-gray-600 text-sm sm:text-base text-center sm:text-left">
     Discover your next favorite story from our curated collection
   </p>
 
+
   <h1
-      onClick={() => navigate("/cart")}
-      className="text-2xl cursor-pointer hover:text-blue-600 mt-2 sm:mt-0"
+    onClick={() => navigate("/cart")}
+    className="text-2xl sm:text-2xl cursor-pointer hover:text-blue-600"
   >
-      🛒 Cart
+    🛒 Cart
   </h1>
 </div>
 
-
-    
     <nav className="bg-gradient-to-r from-gray-300 via-white to-gray-300 p-4">
-
-  <div className="mb-3 relative">
-                    <input 
-                        type="text"
-                        placeholder="Search titles, authors, genres..."
-                        className="w-full p-2 pl-10 rounded text-black bg-gray-100"
-                    />
-                  
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1110.5 3a7.5 7.5 0 016.15 13.65z"
-                        />
-                    </svg>
-                </div>
-
+      <input
+        type="text"
+        placeholder="Search titles, authors..."
+        value={searchTerm}
+        onChange={handleSearch}
+        className="w-full p-2 rounded mb-4"
+      />
       <div className="flex flex-wrap gap-4">
         {categories.map((cat) => (
           <button
             key={cat.value}
             onClick={() => setCategory(cat.value)}
-            className={`px-3 py-1 rounded-full transition-colors ${
+            className={`px-3 py-1 rounded-full ${
               category === cat.value
-                ? "bg-blue-500 text-white" 
-                : "bg-white text-black  hover:bg-black hover:text-white transition-colors duration-300"
+                ? "bg-blue-500 text-white"
+                : "bg-white text-black hover:bg-black hover:text-white"
             }`}
           >
             {cat.label}
           </button>
         ))}
       </div>
-    </nav>
-    </>
+    </nav></>
   );
 };
 
-export default Navbar; // make sure to export default
+export default Navbar;

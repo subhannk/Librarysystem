@@ -24,7 +24,7 @@ const CATEGORY_IMAGES = {
 };
 
 
-const BookCard = ({ title, author, price, categories, rating, image }) => {
+ const BookCard = ({ title, author, price, categories, rating, image }) => {
   return (
     <div className="bg-white shadow-lg rounded-lg p-4 flex flex-col items-center">
 
@@ -64,16 +64,7 @@ const BookCard = ({ title, author, price, categories, rating, image }) => {
 };
 
 
-const CardGrid = ({ category }) => {
-  const [books, setBooks] = React.useState([]);
-
-  React.useEffect(() => {
-    fetch(URLS[category])
-      .then((res) => res.json())
-      .then((data) => setBooks(data.items || []))
-      .catch((err) => console.error(err));
-  }, [category]); 
-
+const CardGrid = ({ books }) => {
   return (
     <div className="p-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -82,7 +73,7 @@ const CardGrid = ({ category }) => {
             key={index}
             title={book.volumeInfo?.title}
             author={book.volumeInfo?.authors?.[0] || "Unknown"}
-            categories={book.volumeInfo?.categories?.[0] || category}
+            categories={book.volumeInfo?.categories?.[0] || "Fiction"}
             rating={book.volumeInfo?.averageRating}
             price={
               book.saleInfo?.listPrice
@@ -92,7 +83,7 @@ const CardGrid = ({ category }) => {
             image={
               book.volumeInfo?.imageLinks?.thumbnail
                 ? book.volumeInfo.imageLinks.thumbnail.replace("http:", "https:")
-                : CATEGORY_IMAGES[category]
+                : CATEGORY_IMAGES["all"]
             }
           />
         ))}
